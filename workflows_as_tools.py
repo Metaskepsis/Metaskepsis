@@ -229,19 +229,22 @@ def create_tools():
     ArxivRetrievalTool=StructuredTool(name="ArxivRetrievalTool",func=ArxivRetrievalTool.retrieve_bib,args_schema=ArxivRetrievalInput,
                            description=ArxivRetrievalTool.description)
     OcrEnhancingTool=OcrEnhancingToolClass()
-    OcrEnhancingTool=StructuredTool(name="OcrEnhancingTool",func=OcrEnhancingTool.ocr_enhance,args_schema=OcrEnhancingInput)
+    OcrEnhancingTool=StructuredTool(name="OcrEnhancingTool",func=OcrEnhancingTool.ocr_enhance,args_schema=OcrEnhancingInput,
+                            description=OcrEnhancingTool.description)
 
     ProofRemoverTool=ProofRemovalToolClass()
-    ProofRemoverTool=StructuredTool(name="ProofRemovalTool",func=ProofRemoverTool.remove_proof,args_schema=ProofRemovalInput)
+    ProofRemoverTool=StructuredTool(name="ProofRemovalTool",func=ProofRemoverTool.remove_proof,args_schema=ProofRemovalInput,
+                            description=ProofRemoverTool.description)
 
     KeywordAndSummaryTool=KeywordAndSummaryToolClass()
     KeywordAndSummaryTool=StructuredTool(name="KeywordAndSummaryTool",func=KeywordAndSummaryTool.get_keyword_and_summary,
-                                         args_schema=KeywordSummaryCreationInput)
+                                         args_schema=KeywordSummaryCreationInput, description=KeywordAndSummaryTool.description)
     CitationExtractionTool=CitationExtractionToolClass()
     CitationExtractionTool=StructuredTool(name="CitationExtractionTool",func=CitationExtractionTool.extract_citations,
-                                         args_schema=CitationExtractionInput)
+                                         args_schema=CitationExtractionInput,description=CitationExtractionTool.description)
     TakeAPeakTool=TakeAPeakToolClass()
-    TakeAPeakTool=StructuredTool(name="TakeAPeakTool", func=TakeAPeakTool.take_a_peak, args_schema=TakeAPeakInput)
+    TakeAPeakTool=StructuredTool(name="TakeAPeakTool", func=TakeAPeakTool.take_a_peak, args_schema=TakeAPeakInput,
+                            description=TakeAPeakTool.description)
 
     tools=[TranslationTool,ArxivRetrievalTool,OcrEnhancingTool,ProofRemoverTool,KeywordAndSummaryTool, pdf_to_markdown, 
            CitationExtractionTool, TakeAPeakTool]
