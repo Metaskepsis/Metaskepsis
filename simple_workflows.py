@@ -12,8 +12,6 @@ from langchain_text_splitters import CharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import torch
 import os
-
-os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 from sentence_transformers import util
 
 
