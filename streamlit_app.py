@@ -4,19 +4,18 @@ from workflows_as_tools import *
 import streamlit as st
 import streamlit as st
 from langchain_core.messages import AIMessage, HumanMessage
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langchain_core.messages import ToolMessage
 from simple_tools import *
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
 import os
-import time
 from dotenv import load_dotenv
 
 def invoke(state,container):   
     
-    supervisor_model=ChatOpenAI(model="gpt-4o",temperature=0)
+    supervisor_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
     tools=create_tools()
     supervisor=supervisor_prompt_template | supervisor_model.bind_tools(tools)
     tool_executor=ToolExecutor(tools)
@@ -66,13 +65,9 @@ def main():
     ready = True
     global st_file
     st_file=None
-    openai_api_key = os.getenv('OPENAI_API_KEY')
-    nvidia_api_key = os.getenv('NVIDIA_API_KEY')
-    if not openai_api_key:
-        st.warning("Missing OPENAI_API_KEY")
-        ready = False
-    if not nvidia_api_key:
-        st.warning("Missing Nvidia_API_KEY")
+    gemini_api_key = os.getenv('GEMINI_API_KEY')
+    if not gemini_api_key:
+        st.warning("Missing GEMINI_API_KEY")
         ready = False
 
     load_dotenv()
@@ -132,10 +127,8 @@ def main():
     with right_sidebar:
         right_container = st.container(height=755)
         with right_container:
-            if not openai_api_key:
-                openai_api_key = "You dont have an OPENAI_API_KEY, get one from here: https://platform.openai.com/account/api-keys, and put it in the .env file"
-            if not nvidia_api_key:
-                nvidia_api_key= "You dont have an Nvidia_API_KEY, get one from here: https://org.ngc.nvidia.com/setup/api-key, and put it in the .env file"
+            if not gemini_api_key:
+                gemini_api_key = "You dont have an GEMINI_API_KEY, get one from here: https://aistudio.google.com/app/apikey, and put it in the .env file"
             
             if not st.session_state.st_file:
                 with open("README.MD", "r") as file:

@@ -31,6 +31,7 @@ expat=2.6.2=hd77b12b_0
 filelock=3.15.1=pypi_0
 frozenlist=1.4.1=pypi_0
 fsspec=2024.5.0=pypi_0
+google-generativeai==0.5.4=pypi_0
 gitdb=4.0.11=pypi_0
 gitpython=3.1.43=pypi_0
 greenlet=3.0.3=pypi_0
@@ -58,9 +59,7 @@ jupyter_core=5.5.0=py312haa95532_0
 langchain=0.2.4=pypi_0
 langchain-community=0.2.4=pypi_0
 langchain-core=0.2.6=pypi_0
-langchain-groq=0.1.5=pypi_0
-langchain-nvidia-ai-endpoints=0.1.2=pypi_0
-langchain-openai=0.1.8=pypi_0
+langchain-google-genai==1.0.3=pypi_0
 langchain-text-splitters=0.2.1=pypi_0
 langgraph=0.0.69=pypi_0
 langsmith=0.1.77=pypi_0
@@ -86,7 +85,6 @@ networkx=3.3=pypi_0
 nltk=3.8.1=pypi_0
 nougat-ocr=0.1.17=pypi_0
 numpy=1.26.4=pypi_0
-openai=1.34.0=pypi_0
 opencv-python-headless=4.10.0.82=pypi_0
 openssl=3.0.14=h827c3e9_0
 orjson=3.10.5=pypi_0

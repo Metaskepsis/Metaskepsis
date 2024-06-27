@@ -3,15 +3,14 @@ from langchain_core.messages import  BaseMessage, ToolMessage, HumanMessage
 from langgraph.prebuilt import ToolInvocation
 from langgraph.prebuilt.tool_executor import ToolExecutor 
 from typing import TypedDict, Annotated
-from langchain_nvidia_ai_endpoints import ChatNVIDIA
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 import operator
 from tqdm import tqdm
 from prompts import *
 from simple_tools import *
 from langchain_text_splitters import CharacterTextSplitter
 from sentence_transformers import util
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import torch
 
 
@@ -57,16 +56,16 @@ class TakeAPeakState(TypedDict):
 class ArxivRetrievalWorkflow:
     def __init__(self, retriever_model=None, cleaner_model=None, receptionist_model=None):
         if retriever_model==None:
-            self.retriever_model=ChatOpenAI(model="gpt-3.5-turbo")
+            self.retriever_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.retriever_model = retriever_model
         
         if  cleaner_model==None:
-            self.cleaner_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.cleaner_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.cleaner_model = cleaner_model
         if receptionist_model==None:
-            self.receptionist_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.receptionist_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.receptionist_model = receptionist_model
         
@@ -173,11 +172,11 @@ class ArxivRetrievalWorkflow:
 class OcrEnchancingWorkflow():
     def __init__(self, enhancer_model=None,  embeder=None):
         if enhancer_model==None:
-            self.enhancer_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.enhancer_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.enhancer_model = enhancer_model
         if embeder==None:
-            self.embeder=OpenAIEmbeddings(model="text-embedding-3-small")
+            self.embeder=GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
         else:
             self.embeder = embeder
 
@@ -227,11 +226,11 @@ class OcrEnchancingWorkflow():
 class ProofRemovingWorkflow:
     def __init__(self, remover_model=None, stamper_model=None):
         if remover_model==None:
-            self.remover_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.remover_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.remover_model = remover_model
         if stamper_model==None:
-            self.stamper_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.stamper_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.stamper_model = stamper_model
         self.remover = proof_remover_prompt_template | self.remover_model
@@ -278,7 +277,7 @@ class ProofRemovingWorkflow:
 class KeywordAndSummaryWorkflow:
     def __init__(self, keyword_and_summary_maker_model=None):
         if keyword_and_summary_maker_model==None:
-            self.keyword_and_summary_maker_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.keyword_and_summary_maker_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.keyword_and_summary_maker_model = keyword_and_summary_maker_model
         self.keyword_and_summary_maker= keyword_and_summary_maker_template | self.keyword_and_summary_maker_model
@@ -317,7 +316,7 @@ class KeywordAndSummaryWorkflow:
 class TranslationWorkflow:
     def __init__(self, translator_model=None):
         if translator_model==None:
-            self.translator_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.translator_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.translator_model = translator_model
         self.translator = translator_prompt_template | self.translator_model
@@ -366,15 +365,15 @@ class TranslationWorkflow:
 class CitationExtractionWorkflow:
     def __init__(self, citation_extractor_model=None, citation_retriever_model=None, citation_cleaner_model=None):
         if citation_extractor_model==None:
-            self.citation_extractor_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.citation_extractor_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.citation_extractor_model = citation_extractor_model
         if citation_retriever_model==None:
-            self.citation_retriever_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.citation_retriever_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.citation_retriever_model = citation_retriever_model
         if citation_cleaner_model==None:
-            self.citation_cleaner_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.citation_cleaner_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.citation_cleaner_model = citation_cleaner_model
         
@@ -456,7 +455,7 @@ class CitationExtractionWorkflow:
 class TakeAPeakWorkflow:
     def __init__(self, take_a_peak_model=None):
         if take_a_peak_model==None:
-            self.take_a_peak_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.take_a_peak_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.take_a_peak_model= take_a_peak_model
         self.take_a_peaker= keyword_and_summary_maker_template | self.take_a_peak_model

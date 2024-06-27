@@ -110,16 +110,10 @@ python create_env.py
 ```
 ### Setting Up API Keys
 
-#### OpenAI API Key
-If you don't have an OPENAI_API_KEY, get one from [OpenAI](https://platform.openai.com/account/api-keys) and add it to the `.env` file:
+#### Gemini API Key
+If you don't have an OPENAI_API_KEY, get one from [Gemini](https://aistudio.google.com/app/apikey) and add it to the `.env` file:
 ```env
-OPENAI_API_KEY="your_key"
-```
-
-#### NVIDIA API Key
-If you don't have an NVIDIA_API_KEY, get one and some free credits from [NVIDIA](https://build.nvidia.com/explore/discover#llama3-70b) and add it to the `.env` file:
-```env
-NVIDIA_API_KEY="your_key"
+GEMINI_API_KEY="your_key"
 ```
 
 ## Usage
@@ -162,7 +156,7 @@ You can also create different workflows that you think are relevant to manipulat
 - Assistance from ChatGPT and Claude Opus
 
 Special thanks to:
-- My girlfriend for her patience during the preparation of this project for the NVIDIA competition.
+- My girlfriend for her patience during the preparation of this project for the Gemini competition.
 - My friend Anna for participating in the promotional video.
 - Nikos Mouratidis and Kostas Kostopoulos for beta testing.
 

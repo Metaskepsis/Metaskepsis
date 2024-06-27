@@ -4,14 +4,11 @@ from langchain_core.messages import  BaseMessage, ToolMessage, AIMessage
 from langgraph.prebuilt import ToolInvocation
 from langgraph.prebuilt.tool_executor import ToolExecutor 
 from typing import TypedDict, Annotated
-from langchain_nvidia_ai_endpoints import ChatNVIDIA
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from prompts import *
 from simple_tools import *
 from workflows_as_tools import *
-import streamlit as st
 from dotenv import load_dotenv
-import os
 
 
 load_dotenv()
@@ -72,7 +69,7 @@ class MetaWorkflow():
         return workflow
 
 
-model=ChatOpenAI(model="gpt-4o",temperature=0)
+model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
 workflow=MetaWorkflow(model)
 app=workflow.create_workflow()
 app=app.compile()

@@ -1,11 +1,6 @@
-import urllib, os, subprocess, pathlib, pymupdf4llm
 from prompts import *
 from langchain_core.tools import tool, StructuredTool
-from langchain_nvidia_ai_endpoints import ChatNVIDIA
-from langchain_openai import ChatOpenAI
-from langchain_groq import ChatGroq
-from langchain_text_splitters import CharacterTextSplitter
-from tqdm import tqdm
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage 
 from simple_workflows import *
 from langchain.pydantic_v1 import BaseModel, Field
@@ -41,15 +36,15 @@ class TakeAPeakInput(BaseModel):
 class ArxivRetrievalToolClass:
     def __init__(self, retriever_model=None, cleaner_model=None, receptionist_model=None):
         if retriever_model==None:
-            self.retriever_model=ChatOpenAI(model="gpt-3.5-turbo")
+            self.retriever_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.retriever_model = retriever_model
         if  cleaner_model==None:
-            self.cleaner_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.cleaner_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.cleaner_model = cleaner_model
         if receptionist_model==None:
-            self.receptionist_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.receptionist_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.receptionist_model = receptionist_model
         self.description = "This tool takes a string that contains a collection of articles and retrieves them from arXiv."    
@@ -75,12 +70,12 @@ class OcrEnhancingToolClass():
     def __init__(self, enhancer_model=None, embeder=None):
         
         if enhancer_model==None:
-            self.enhancer_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.enhancer_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.enhancer_model = enhancer_model
 
         if embeder==None:
-            self.embeder=OpenAIEmbeddings(model="text-embedding-3-small")
+            self.embeder=GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
         else:
             self.embeder = embeder
 
@@ -103,11 +98,11 @@ class OcrEnhancingToolClass():
 class ProofRemovalToolClass():
     def __init__(self, stamper_model=None,remover_model=None):
         if stamper_model==None:
-            self.stamper_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.stamper_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.stamper_model = stamper_model
         if remover_model==None:
-            self.remover_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.remover_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.remover_model = remover_model
         self.description = "This tool takes a text in a form of a string and removes the proof section from the text."
@@ -128,7 +123,7 @@ class ProofRemovalToolClass():
 class KeywordAndSummaryToolClass:
     def __init__(self, keyword_and_summary_model=None):
         if keyword_and_summary_model==None:
-            self.keyword_and_summary_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.keyword_and_summary_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.keyword_and_summary_model = keyword_and_summary_model
         self.description="""
@@ -154,7 +149,7 @@ class KeywordAndSummaryToolClass:
 class TranslationToolClass:
     def __init__(self, translator_model=None):
         if translator_model==None:
-            self.translator_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.translator_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.translator_model = translator_model
 
@@ -182,15 +177,15 @@ class TranslationToolClass:
 class CitationExtractionToolClass:
     def __init__(self, citation_extractor_model=None, citation_retriever_model=None, citation_cleaner_model=None):
         if citation_extractor_model==None:
-            self.citation_extractor_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.citation_extractor_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.citation_extractor_model = citation_extractor_model
         if citation_retriever_model==None:
-            self.citation_retriever_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.citation_retriever_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.citation_retriever_model = citation_retriever_model
         if citation_cleaner_model==None:
-            self.citation_cleaner_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.citation_cleaner_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.citation_cleaner_model = citation_cleaner_model
 
@@ -210,7 +205,7 @@ class CitationExtractionToolClass:
 class TakeAPeakToolClass:
     def __init__(self, take_a_peak_model=None):
         if take_a_peak_model==None:
-            self.take_a_peak_model=ChatNVIDIA(model="meta/llama3-70b-instruct")
+            self.take_a_peak_model=ChatGoogleGenerativeAI(model="gemini-1.5-flash")
         else:
             self.take_a_peak_model = take_a_peak_model
         self.description="""
