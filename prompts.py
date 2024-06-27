@@ -80,7 +80,7 @@ In this case please use the full title as the one you received along with the id
 If you get a PDF file cannot be found error message, return 'No pdf file found for the requested query'.
 """
 
-arxiv_metadata_scraper_system_template ="""You are a metadata scraper. Your taks is to go through the 
+arxiv_metadata_scraper_system_template = """You are a metadata scraper. Your taks is to go through the 
 following metadata coming from arXiv and return back the id and the title of a single paper. 
 Among all the papers that you may encounter in the metadata return the one that belongs 
 to the file that is the most relevant to the query {article_keywords}. Follow the following schema. 
@@ -88,7 +88,7 @@ The most relevant arXiv paper to the querry  is "title of the paper" and its id-
 If you get any error, return 'I got an error' follwoed by the error message verbatim."""
 
 
-keyword_and_summary_maker_system_template= """You are a multilingual expert mathematician or computer scientist tasked with 
+keyword_and_summary_maker_system_template = """You are a multilingual expert mathematician or computer scientist tasked with 
 generating keywords and summarizing research papers. Your objective is to identify key terms, which can include fields, 
 subfields, tools used in the paper, techniques, applications, and algorithms. Provide a concise description of the paper's content as well.
 The process involves sequentially receiving pages from the paper possibly written in a different language, along with the previously 
@@ -110,7 +110,7 @@ but we need to format the citations in the way they are formated in the bad text
 as faithfull as possible but with citation format that matches the one from the bad texts. """
 
 
-translator_system_template= """You are a multilingual expert mathematician or computer scientist tasked with translated academic papers. 
+translator_system_template = """You are a multilingual expert mathematician or computer scientist tasked with translated academic papers. 
 Your task is to translate the text  from its current language to {language}. I will provide some keywords and summary (possibly empty) 
 in order to make the translation more appropiate to the specific community. Please respond only with the translated text and nothing else. 
 """
@@ -119,7 +119,7 @@ proof_stamper_system_template = """You are a multinlingual expert mathematician.
 Your job is to tell me if the given text contains a mathematical proof that doesnt finish and likely extends to the next page. 
 If it does, then just say "Yes" otherwise just say "No". """
 
-proof_remover_system_template= """You are a multinlingual expert mathematician given a single page from a text likely 
+proof_remover_system_template = """You are a multinlingual expert mathematician given a single page from a text likely 
 written in a different language. Your goal is to locate everything that is part of a proof and discard it, returning to me only the 
 part of the text that is NOT a part from a proof. You can keep any theorem or lemma statements. 
 """
@@ -134,7 +134,7 @@ Determine if the given page is part of the bibliography section of a document.
 If it is, accurately extract and return all the cited papers listed on this page. If it is not part of the bibliography section, 
 return 'Not a bibliography page.'"""
 
-citation_extractor_system_template= """You are a distinguished scholar tasked with extracting relevant citations from a scientific paper. You will receive the following information:
+citation_extractor_system_template = """You are a distinguished scholar tasked with extracting relevant citations from a scientific paper. You will receive the following information:
 1. A summary of the whole paper (approximately 200 words)
 2. The specific type of citations to extract (provided as a keyword or a brief description)
 3. The full citation list (in a standard citation format, e.g., APA or MLA)
@@ -148,115 +148,151 @@ Please format the output as follows:
 
 Note: Focus solely on extracting the relevant citations without providing any additional reasoning or explanations."""
 
-citation_cleaner_system_template= """You are a scholar. You get a test with different citations. Please bring back only the citations that have
+citation_cleaner_system_template = """You are a scholar. You get a test with different citations. Please bring back only the citations that have
 description after them. Try to not duplicate"""
 
-supervisor_prompt_template= ChatPromptTemplate.from_messages([("system",supervisor_system_template),MessagesPlaceholder(variable_name="manager_history")])
+supervisor_prompt_template = ChatPromptTemplate.from_messages(
+    [
+        ("system", supervisor_system_template),
+        MessagesPlaceholder(variable_name="manager_history"),
+    ]
+)
 
-proof_remover_prompt_template= ChatPromptTemplate.from_messages([("system",proof_remover_system_template),
-                                                          ("user", "{text}"),
-                                                          ("assistant", "Thanks for the text. Any final comments before I do the process."),
-                                                          ("user", "Please answer only with the requested text dont and anything else to your respond.")])
+proof_remover_prompt_template = ChatPromptTemplate.from_messages(
+    [
+        ("system", proof_remover_system_template),
+        ("user", "{text}"),
+        (
+            "assistant",
+            "Thanks for the text. Any final comments before I do the process.",
+        ),
+        (
+            "user",
+            "Please answer only with the requested text dont and anything else to your respond.",
+        ),
+    ]
+)
 
-citation_retriever_prompt_template = ChatPromptTemplate.from_messages([
-    ("system", citation_retriever_system_template),
-    ("user", "{main_text}")
-])
+citation_retriever_prompt_template = ChatPromptTemplate.from_messages(
+    [("system", citation_retriever_system_template), ("user", "{main_text}")]
+)
 
-citation_extractor_prompt_template = ChatPromptTemplate.from_messages([
-    ("system", citation_extractor_system_template),
-    ("user", "Can you extract citations for me?"),
-    ("assistant", "Sure. Do you want all the citations, the most important, or do you want me to follow some other criteria?"),
-    ("user", "Good question. I will follow the criteria: {extraction_type}"),
-    ("assistant", "Got it. Can you give me the auxiliary files like summaries that I could use?"),
-    ("user", "{auxiliary_text}"),
-    ("assistant", "Got it. Can you give me the full list with the citations?"),
-    ("user", "{list_of_citations}"),
-    ("assistant", "Got it. Can you give me the page of text now?"),
-    ("user", "Sure, here you are:\n{main_text}")
-])
+citation_extractor_prompt_template = ChatPromptTemplate.from_messages(
+    [
+        ("system", citation_extractor_system_template),
+        ("user", "Can you extract citations for me?"),
+        (
+            "assistant",
+            "Sure. Do you want all the citations, the most important, or do you want me to follow some other criteria?",
+        ),
+        ("user", "Good question. I will follow the criteria: {extraction_type}"),
+        (
+            "assistant",
+            "Got it. Can you give me the auxiliary files like summaries that I could use?",
+        ),
+        ("user", "{auxiliary_text}"),
+        ("assistant", "Got it. Can you give me the full list with the citations?"),
+        ("user", "{list_of_citations}"),
+        ("assistant", "Got it. Can you give me the page of text now?"),
+        ("user", "Sure, here you are:\n{main_text}"),
+    ]
+)
 
-citation_cleaner_prompt_template = ChatPromptTemplate.from_messages([
-    ("system", citation_cleaner_system_template),
-    ("user", "{list_of_citations}")
-])
+citation_cleaner_prompt_template = ChatPromptTemplate.from_messages(
+    [("system", citation_cleaner_system_template), ("user", "{list_of_citations}")]
+)
 
-proof_stamper_prompt_template= ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                proof_stamper_system_template,
-            ),
-            ("user", "{text}"),
-        ]
+proof_stamper_prompt_template = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            proof_stamper_system_template,
+        ),
+        ("user", "{text}"),
+    ]
 )
 
 
-
 arxiv_receptionist_prompt_template = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                arxiv_receptionist_system_template,
-            ),
-            MessagesPlaceholder(variable_name="receptionist_retriever_history"),
+    [
+        (
+            "system",
+            arxiv_receptionist_system_template,
+        ),
+        MessagesPlaceholder(variable_name="receptionist_retriever_history"),
+    ]
+)
 
-        ]
-    )
-
-arxiv_retriever_prompt_template = ChatPromptTemplate.from_messages([("system",arxiv_retriever_system_template),("user", "the article keywords are {article_keywords}"),
-                                                    MessagesPlaceholder(variable_name="last_action_outcome"),])
+arxiv_retriever_prompt_template = ChatPromptTemplate.from_messages(
+    [
+        ("system", arxiv_retriever_system_template),
+        ("user", "the article keywords are {article_keywords}"),
+        MessagesPlaceholder(variable_name="last_action_outcome"),
+    ]
+)
 
 arxiv_metadata_scraper_prompt_template = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                arxiv_metadata_scraper_system_template,
-            ),
-            ("user", "The querry is  {article_keywords}"),
-            ("user", "The metada are {metadata}"),
-        ]
-    )
+    [
+        (
+            "system",
+            arxiv_metadata_scraper_system_template,
+        ),
+        ("user", "The querry is  {article_keywords}"),
+        ("user", "The metada are {metadata}"),
+    ]
+)
 
 ocr_enhancer_prompt_template = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                ocr_enhancer_system_template,
-            ),
-            ("user", "Here is the good text: \n{good_text}"),
-            ("assistant",  "Thank you. Please provide me with the bad text." ),
-            ("user", "Here is the bad text: \n{bad_text}"),
-            ("assistant",  "Thank you. Any further instructions" ),
-            ("user", "Please return only the requested text and nothing else"),
-        ]
-    )
+    [
+        (
+            "system",
+            ocr_enhancer_system_template,
+        ),
+        ("user", "Here is the good text: \n{good_text}"),
+        ("assistant", "Thank you. Please provide me with the bad text."),
+        ("user", "Here is the bad text: \n{bad_text}"),
+        ("assistant", "Thank you. Any further instructions"),
+        ("user", "Please return only the requested text and nothing else"),
+    ]
+)
 
 
-translator_prompt_template= ChatPromptTemplate.from_messages([("system",translator_system_template),
-                                                          ("user", "Here is  the contenxt in the form of keywords and summary :{auxilary_text}"),
-                                                          ("assistant", "Thank you very much! Can I have the text now?"),
-                                                          ("user","Of course, here is the text:'{page}'")])
-
-
+translator_prompt_template = ChatPromptTemplate.from_messages(
+    [
+        ("system", translator_system_template),
+        (
+            "user",
+            "Here is  the contenxt in the form of keywords and summary :{auxilary_text}",
+        ),
+        ("assistant", "Thank you very much! Can I have the text now?"),
+        ("user", "Of course, here is the text:'{page}'"),
+    ]
+)
 
 
 citiation_fixer_prompt_template = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                citiation_fixer_system_template,
-            ),
-            ("user", "Here is the good text: \n{good_text}"),
-            ("assistant",  "Thank you. Please provide me with the bad text." ),
-            ("user", "Here is the bad text: \n{bad_text}"),
-            ("assistant",  "Thank you. Any further instructions" ),
-            ("user", "Please return only the requested text and nothing else"),
-        ]
-    )
+    [
+        (
+            "system",
+            citiation_fixer_system_template,
+        ),
+        ("user", "Here is the good text: \n{good_text}"),
+        ("assistant", "Thank you. Please provide me with the bad text."),
+        ("user", "Here is the bad text: \n{bad_text}"),
+        ("assistant", "Thank you. Any further instructions"),
+        ("user", "Please return only the requested text and nothing else"),
+    ]
+)
 
 
-keyword_and_summary_maker_template= ChatPromptTemplate.from_messages([("system",keyword_and_summary_maker_system_template),
-                                                          ("user", "Here is your keywords and summary up to now:{text}"),
-                                                          ("assistant", "Cool! Please provide me the next page!"),
-                                                          ("user", "Here you are:: ''{page}'' ! I am excited to see what your updated list of keywords and summary is!"),])
+keyword_and_summary_maker_template = ChatPromptTemplate.from_messages(
+    [
+        ("system", keyword_and_summary_maker_system_template),
+        ("user", "Here is your keywords and summary up to now:{text}"),
+        ("assistant", "Cool! Please provide me the next page!"),
+        (
+            "user",
+            "Here you are:: ''{page}'' ! I am excited to see what your updated list of keywords and summary is!",
+        ),
+    ]
+)
