@@ -1,4 +1,5 @@
 import os
+
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 from simple_workflows import *
 from simple_tools import *
@@ -129,7 +130,8 @@ def main():
                         st.session_state.messages.append(
                             {
                                 "role": "tool",
-                                "content": str(tool_call["name"]) + str(tool_call["args"]),
+                                "content": str(tool_call["name"])
+                                + str(tool_call["args"]),
                             }
                         )
                         Invocation = ToolInvocation(
@@ -160,6 +162,7 @@ def main():
                 )
                 break
         return
+
     st.set_page_config(
         page_title="Chat with bot that broke academia! HERE HERE", layout="wide"
     )
