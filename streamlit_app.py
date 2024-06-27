@@ -1,3 +1,5 @@
+import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 from simple_workflows import *
 from simple_tools import *
 from workflows_as_tools import *
@@ -8,7 +10,6 @@ from dotenv import load_dotenv
 from langchain_core.messages import ToolMessage
 from simple_tools import *
 from streamlit_pdf_viewer import pdf_viewer
-import os
 from dotenv import load_dotenv
 
 
@@ -87,6 +88,78 @@ def invoke(state, container):
 
 
 def main():
+    def invoke(state, container):
+        supervisor_model = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
+        tools = create_tools()
+        supervisor = supervisor_prompt_template | supervisor_model.bind_tools(tools)
+        tool_executor = ToolExecutor(tools)
+        folder_structure = get_folder_structure()
+        while True:
+            workflow_state = {
+                "manager_history": state.chat_history,
+                "folder_structure": folder_structure,
+            }
+            action = supervisor.invoke(workflow_state)
+            message = st.session_state.messages[-1]
+            if "tool_calls" in action.additional_kwargs:
+                with container:
+                    with st.chat_message(message["role"], avatar=":material/build:"):
+                        st.write(
+                            "I am currently applying: " + action.tool_calls[-1]["name"]
+                        )
+                        st.write(
+                            "Please be patient, some of the tools take time. Check your terminal for progress."
+                        )
+                        st.session_state.messages.append(
+                            {
+                                "role": "tool",
+                                "content": "Please be patient, some of the tools take time. Check your terminal for progress.",
+                            }
+                        )
+                        st.session_state.messages.append(
+                            {
+                                "role": "tool",
+                                "content": "I am currently using the following tool: "
+                                + action.tool_calls[-1]["name"],
+                            }
+                        )
+                        st.session_state.chat_history.append(action)
+                        tool_call = action.tool_calls[-1]
+                        st.write(tool_call["name"], tool_call["args"])
+                        st.session_state.messages.append(
+                            {
+                                "role": "tool",
+                                "content": str(tool_call["name"]) + str(tool_call["args"]),
+                            }
+                        )
+                        Invocation = ToolInvocation(
+                            tool=tool_call["name"], tool_input=tool_call["args"]
+                        )
+                        try:
+                            response = tool_executor.invoke(Invocation)
+                        except Exception as e:
+                            response = str(e)
+                        if response is None:
+                            response = "Something went wrong"
+                        st.write(response)
+                        st.session_state.messages.append(
+                            {"role": "tool", "content": str(response)}
+                        )
+                        response = ToolMessage(
+                            content=response, tool_call_id=tool_call["id"]
+                        )
+                        st.session_state.chat_history.append(response)
+
+            if "tool_calls" not in action.additional_kwargs:
+                with container:
+                    with st.chat_message(message["role"]):
+                        st.write(message["content"])
+                st.session_state.chat_history.append(action)
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": action.content}
+                )
+                break
+        return
     st.set_page_config(
         page_title="Chat with bot that broke academia! HERE HERE", layout="wide"
     )
