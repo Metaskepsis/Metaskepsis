@@ -113,7 +113,7 @@ python create_env.py
 #### Gemini API Key
 If you don't have an OPENAI_API_KEY, get one from [Gemini](https://aistudio.google.com/app/apikey) and add it to the `.env` file:
 ```env
-GEMINI_API_KEY="your_key"
+GOOGLE_API_KEY="your_key"
 ```
 
 ## Usage
