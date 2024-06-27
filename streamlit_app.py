@@ -98,9 +98,9 @@ def main():
     ready = True
     global st_file
     st_file = None
-    gemini_api_key = os.getenv("GEMINI_API_KEY")
-    if not gemini_api_key:
-        st.warning("Missing GEMINI_API_KEY")
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    if not google_api_key:
+        st.warning("Missing GOOGLE_API_KEY")
         ready = False
 
     load_dotenv()
@@ -184,8 +184,8 @@ def main():
     with right_sidebar:
         right_container = st.container(height=755)
         with right_container:
-            if not gemini_api_key:
-                gemini_api_key = "You dont have an GEMINI_API_KEY, get one from here: https://aistudio.google.com/app/apikey, and put it in the .env file"
+            if not google_api_key:
+                google_api_key = "You dont have an GOOGLE_API_KEY, get one from here: https://aistudio.google.com/app/apikey, and put it in the .env file"
 
             if not st.session_state.st_file:
                 with open("README.MD", "r") as file:
