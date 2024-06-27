@@ -9,9 +9,11 @@ from tqdm import tqdm
 from prompts import *
 from simple_tools import *
 from langchain_text_splitters import CharacterTextSplitter
-from sentence_transformers import util
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import torch
+import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+from sentence_transformers import util
 
 
 class ArxivState(TypedDict):
