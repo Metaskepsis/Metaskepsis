@@ -1,6 +1,6 @@
 from prompts import *
 from langchain_core.tools import tool, StructuredTool
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_core.messages import HumanMessage
 from simple_workflows import *
 from langchain.pydantic_v1 import BaseModel, Field
